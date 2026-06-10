@@ -1,35 +1,25 @@
-//import { StyleSheet, Text, View } from "react-native";
 import { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-
-// Define the shape of the props our component expects
 interface ProfileCardProps {
     name: string;
     studentId: string;
     department: string;
     bio: string;
+    skills?: string[];
 }
 
-
-//export default function ProfileCard(name: string, studentId: string, department: string, bio: string) 
-export default function ProfileCard({ name, studentId, department, bio }: ProfileCardProps) {
-    // Build initials from the name prop
-    const initials = name 
-        .split(" ") 
+export default function ProfileCard({ name, studentId, department, bio, skills = [] }: ProfileCardProps) {
+    const initials = name
+        .split(" ")
         .map((word) => word[0])
         .join("");
 
-        // NEW: declare a state variable 'followed', starting as false
-  // setFollowed is the function we call to change it
-  const [followed, setFollowed] = useState(false);
- 
-  // NEW: toggle function — flips followed between true and false
-  const handleFollow = () => {
-    setFollowed(!followed);
-  };
- 
+    const [followed, setFollowed] = useState(false);
 
+    const handleFollow = () => {
+        setFollowed(!followed);
+    };
 
     return (
         <View style={styles.card}>
@@ -37,7 +27,6 @@ export default function ProfileCard({ name, studentId, department, bio }: Profil
                 <Text style={styles.avatarText}>{initials}</Text>
             </View>
 
-            {/* Use curly braces {} to insert JS variables into JSX */}
             <Text style={styles.name}>{name}</Text>
             <Text style={styles.idBadge}>ID: {studentId}</Text>
             <Text style={styles.role}>{department}</Text>
@@ -46,20 +35,26 @@ export default function ProfileCard({ name, studentId, department, bio }: Profil
 
             <Text style={styles.bio}>{bio}</Text>
 
+            {/* Skills badges */}
+            <View style={styles.skillsContainer}>
+                {skills.map((skill, index) => (
+                    <View key={index} style={styles.skillBadge}>
+                        <Text style={styles.skillText}>{skill}</Text>
+                    </View>
+                ))}
+            </View>
 
-            {/* NEW: Follow button — style changes based on followed state */}
-      <TouchableOpacity
-        style={[styles.button, followed && styles.buttonFollowed]}
-        onPress={handleFollow}
-      >
-        <Text style={[styles.buttonText, followed && styles.buttonTextFollowed]}>
-          {followed ? 'Following ✓' : 'Follow'}
-        </Text>
-      </TouchableOpacity>
-
+            {/* Follow button */}
+            <TouchableOpacity
+                style={[styles.button, followed && styles.buttonFollowed]}
+                onPress={handleFollow}
+            >
+                <Text style={[styles.buttonText, followed && styles.buttonTextFollowed]}>
+                    {followed ? 'Following ✓' : 'Follow'}
+                </Text>
+            </TouchableOpacity>
         </View>
     );
-
 }
 
 const styles = StyleSheet.create({
@@ -123,26 +118,44 @@ const styles = StyleSheet.create({
         textAlign: "center",
         lineHeight: 22,
     },
-      // ADD these new button styles at the bottom:
-  button: {
-    marginTop: 20,
-    paddingVertical: 10,
-    paddingHorizontal: 32,
-    borderRadius: 24,
-    borderWidth: 2,
-    borderColor: '#0D9488',
-    backgroundColor: 'transparent',
-  },
-  buttonFollowed: {
-    backgroundColor: '#0D9488',   // filled when following
-  },
-  buttonText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#0D9488',
-  },
-  buttonTextFollowed: {
-    color: '#FFFFFF',             // white text when following
-  },
-
+    button: {
+        marginTop: 20,
+        paddingVertical: 10,
+        paddingHorizontal: 32,
+        borderRadius: 24,
+        borderWidth: 2,
+        borderColor: '#0D9488',
+        backgroundColor: 'transparent',
+    },
+    buttonFollowed: {
+        backgroundColor: '#0D9488',
+    },
+    buttonText: {
+        fontSize: 14,
+        fontWeight: '600',
+        color: '#0D9488',
+    },
+    buttonTextFollowed: {
+        color: '#FFFFFF',
+    },
+    skillsContainer: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+        marginTop: 12,
+        gap: 8,
+    },
+    skillBadge: {
+        backgroundColor: '#EFF6FF',
+        borderRadius: 20,
+        paddingHorizontal: 12,
+        paddingVertical: 5,
+        borderWidth: 1,
+        borderColor: '#BFDBFE',
+    },
+    skillText: {
+        fontSize: 12,
+        color: '#1D4ED8',
+        fontWeight: '500',
+    },
 });
